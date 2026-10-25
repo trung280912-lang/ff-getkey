@@ -567,3 +567,206 @@ window.generateBulkKeys = generateBulkKeys;
 window.clearAllKeys = clearAllKeys;
 window.saveSettings = saveSettings;
 window.testWebhook = testWebhook;
+
+// ============================================================
+//  RÚT GỌN LINK LINK4M
+// ============================================================
+const FOURM_LS_API_KEY  = 'ffkey_link4m_api_key';
+const FOURM_LS_HISTORY  = 'ffkey_link4m_history';
+
+/** Lưu API Key */
+function save4mApiKey() {
+  const val = document.getElementById('fourm_api_key').value.trim();
+  if (!val) { showToast('⚠️ Vui lòng nhập API Key!', 'warning'); return; }
+  localStorage.setItem(FOURM_LS_API_KEY, val);
+  update4mApiStatus();
+  showToast('✅ Đã lưu API Key Link4M!', 'success');
+}
+
+/** Hiện/ẩn API Key */
+function toggle4mApiKeyVisibility() {
+  const inp = document.getElementById('fourm_api_key');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+}
+
+/** Cập nhật badge trạng thái */
+function update4mApiStatus() {
+  const key = localStorage.getItem(FOURM_LS_API_KEY);
+  const el  = document.getElementById('apiKeyStatus');
+  if (!el) return;
+  if (key) {
+    el.textContent = '● Đã cấu hình';
+    el.className = 'badge badge-success';
+    // Điền sẵn input (dấu ẩn)
+    document.getElementById('fourm_api_key').value = key;
+  } else {
+    el.textContent = '● Chưa cấu hình';
+    el.className = 'badge badge-warning';
+  }
+}
+
+/** Rút gọn link qua API 4M */
+async function shorten4mLink() {
+  const apiKey  = localStorage.getItem(FOURM_LS_API_KEY);
+  const longUrl = document.getElementById('fourm_original_url').value.trim();
+  const errBox  = document.getElementById('fourm_error_box');
+  const resBox  = document.getElementById('fourm_result_box');
+  const btn     = document.getElementById('shortenBtn');
+
+  // Reset
+  errBox.style.display = 'none';
+  resBox.style.display = 'none';
+
+  if (!apiKey) {
+    errBox.textContent = '❌ Bạn chưa nhập API Key 4M! Vui lòng điền vào phần "Cấu Hình API 4M" phía trên.';
+    errBox.style.display = 'block';
+    return;
+  }
+  if (!longUrl) {
+    showToast('⚠️ Vui lòng nhập link cần rút gọn!', 'warning');
+    return;
+  }
+  try { new URL(longUrl); } catch {
+    errBox.textContent = '❌ Link không hợp lệ! Hãy bắt đầu bằng https:// hoặc http://';
+    errBox.style.display = 'block';
+    return;
+  }
+
+  // Loading
+  btn.disabled = true;
+  btn.textContent = '⏳ Đang rút gọn...';
+
+  try {
+    // Gọi API Link4M
+    // Endpoint: https://link4m.co/api?api=API_KEY&url=LONG_URL
+    const apiUrl = `https://link4m.co/api?api=${encodeURIComponent(apiKey)}&url=${encodeURIComponent(longUrl)}`;
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    if (data.status === 'success' && data.shortenedUrl) {
+      const shortUrl = data.shortenedUrl;
+      document.getElementById('fourm_short_url').value = shortUrl;
+      document.getElementById('fourm_open_link').href = shortUrl;
+      resBox.style.display = 'block';
+
+      // Lưu vào lịch sử
+      add4mHistory(longUrl, shortUrl);
+      render4mHistory();
+      showToast('✅ Rút gọn link thành công!', 'success');
+    } else {
+      // Hiển thị lỗi từ API
+      const msg = data.message || data.error || JSON.stringify(data);
+      errBox.innerHTML = `❌ API 4M trả về lỗi: <code style="color:#ffaa44;">${msg}</code><br><br>
+        💡 Kiểm tra lại: API Key có đúng không? Link có bị chặn không?`;
+      errBox.style.display = 'block';
+    }
+  } catch (err) {
+    // Fallback thông báo lỗi CORS
+    errBox.innerHTML = `❌ Không kết nối được đến API Link4M.<br><br>
+      <strong>Nguyên nhân có thể:</strong><br>
+      • Trình duyệt chặn CORS (chạy file HTML trực tiếp bị giới hạn)<br>
+      • API Key sai hoặc hết hạn<br>
+      • Mạng bị chặn truy cập link4m.co<br><br>
+      💡 <strong>Giải pháp:</strong> Deploy website lên Vercel/Netlify rồi sử dụng tính năng này.`;
+    errBox.style.display = 'block';
+    console.error('[Link4M API Error]', err);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔗 RÚT GỌN LINK';
+  }
+}
+
+/** Copy link rút gọn */
+function copy4mLink() {
+  const val = document.getElementById('fourm_short_url').value;
+  if (!val) return;
+  navigator.clipboard.writeText(val).then(() => {
+    showToast('📋 Đã copy link!', 'success');
+  });
+}
+
+/** Xóa form */
+function clear4mForm() {
+  document.getElementById('fourm_original_url').value = '';
+  document.getElementById('fourm_short_url').value = '';
+  document.getElementById('fourm_result_box').style.display = 'none';
+  document.getElementById('fourm_error_box').style.display = 'none';
+}
+
+/** Thêm vào lịch sử */
+function add4mHistory(longUrl, shortUrl) {
+  const history = JSON.parse(localStorage.getItem(FOURM_LS_HISTORY) || '[]');
+  history.unshift({
+    id: Date.now(),
+    longUrl,
+    shortUrl,
+    time: new Date().toLocaleString('vi-VN'),
+  });
+  // Giữ tối đa 50 mục
+  if (history.length > 50) history.pop();
+  localStorage.setItem(FOURM_LS_HISTORY, JSON.stringify(history));
+}
+
+/** Render lịch sử */
+function render4mHistory() {
+  const list    = document.getElementById('fourm_history_list');
+  if (!list) return;
+  const history = JSON.parse(localStorage.getItem(FOURM_LS_HISTORY) || '[]');
+  if (!history.length) {
+    list.innerHTML = '<div style="padding:40px;text-align:center;color:var(--text-secondary);font-size:14px;">Chưa có link nào được rút gọn</div>';
+    return;
+  }
+  list.innerHTML = history.map(item => `
+    <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:3px;">${item.time}</div>
+        <div style="font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;" title="${item.longUrl}">
+          🔗 ${item.longUrl}
+        </div>
+        <div style="font-size:13px;color:#00ff80;font-family:'Orbitron',monospace;margin-top:4px;">
+          ✂️ <a href="${item.shortUrl}" target="_blank" style="color:#00ff80;text-decoration:none;">${item.shortUrl}</a>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button class="btn btn-secondary" style="padding:6px 12px;font-size:12px;" onclick="navigator.clipboard.writeText('${item.shortUrl}').then(()=>showToast('📋 Đã copy!','success'))">📋</button>
+        <button class="btn btn-danger"    style="padding:6px 12px;font-size:12px;" onclick="delete4mHistory(${item.id})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/** Xóa 1 mục lịch sử */
+function delete4mHistory(id) {
+  let history = JSON.parse(localStorage.getItem(FOURM_LS_HISTORY) || '[]');
+  history = history.filter(item => item.id !== id);
+  localStorage.setItem(FOURM_LS_HISTORY, JSON.stringify(history));
+  render4mHistory();
+  showToast('🗑️ Đã xóa!', 'info');
+}
+
+/** Xóa toàn bộ lịch sử 4M */
+function clear4mHistory() {
+  if (!confirm('Xóa toàn bộ lịch sử rút gọn link?')) return;
+  localStorage.removeItem(FOURM_LS_HISTORY);
+  render4mHistory();
+  showToast('🗑️ Đã xóa lịch sử!', 'info');
+}
+
+// Expose 4M functions
+window.save4mApiKey          = save4mApiKey;
+window.toggle4mApiKeyVisibility = toggle4mApiKeyVisibility;
+window.shorten4mLink         = shorten4mLink;
+window.copy4mLink            = copy4mLink;
+window.clear4mForm           = clear4mForm;
+window.delete4mHistory       = delete4mHistory;
+window.clear4mHistory        = clear4mHistory;
+
+// Load 4M panel data khi chuyển sang panel
+const _origSwitchPanel = window.switchPanel;
+window.switchPanel = function(panel) {
+  _origSwitchPanel(panel);
+  if (panel === 'shortlink') {
+    update4mApiStatus();
+    render4mHistory();
+  }
+};

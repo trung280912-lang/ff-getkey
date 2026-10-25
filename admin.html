@@ -100,6 +100,11 @@
 
       <div class="nav-section-label">HỆ THỐNG</div>
 
+      <div class="nav-item" data-panel="shortlink" onclick="switchPanel('shortlink')">
+        <span class="nav-item-icon">🔗</span>
+        Rút Gọn Link4M
+      </div>
+
       <div class="nav-item" data-panel="webhook" onclick="switchPanel('webhook')">
         <span class="nav-item-icon">🔔</span>
         Discord Webhook
@@ -480,6 +485,79 @@
           </div>
         </div>
       </div>
+
+      <!-- ========== SHORTLINK 4M PANEL ========== -->
+      <div class="panel" id="panel-shortlink">
+
+        <!-- API KEY CARD -->
+        <div class="data-card" style="margin-bottom:20px;">
+          <div class="data-card-header">
+            <div class="data-card-title">🔑 Cấu Hình API Link4M</div>
+            <span class="badge badge-warning" id="apiKeyStatus">● Chưa cấu hình</span>
+          </div>
+          <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+            <div style="background:rgba(255,107,0,0.06);border:1px solid rgba(255,107,0,0.2);border-radius:10px;padding:14px;font-size:13px;color:var(--text-secondary);line-height:1.7;">
+              📌 Lấy API Key tại <a href="https://link4m.co/member/tools/api" target="_blank" style="color:var(--primary);text-decoration:none;font-weight:600;">link4m.co → Member → API</a><br>
+              🔒 API Key được lưu cục bộ, chỉ bạn mới thấy.<br>
+              ⚡ Sau khi lưu API Key, dán link vào ô bên dưới để rút gọn.
+            </div>
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">API Key 4M</label>
+              <div style="display:flex;gap:10px;">
+                <input class="form-input" id="fourm_api_key" type="password" placeholder="Dán API Key của bạn vào đây..." style="flex:1;" />
+                <button class="btn btn-primary" onclick="save4mApiKey()">💾 Lưu</button>
+                <button class="btn btn-secondary" onclick="toggle4mApiKeyVisibility()" id="toggleApiKeyBtn" title="Hiện/Ẩn">👁️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SHORTLINK TOOL CARD -->
+        <div class="data-card" style="margin-bottom:20px;">
+          <div class="data-card-header">
+            <div class="data-card-title">🔗 Rút Gọn Link 4M</div>
+          </div>
+          <div style="padding:24px;display:flex;flex-direction:column;gap:16px;">
+            <div class="form-group" style="margin:0;">
+              <label class="form-label">Link gốc cần rút gọn</label>
+              <input class="form-input" id="fourm_original_url" type="url" placeholder="https://example.com/link-dai-can-rut-gon..." />
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="shorten4mLink()" id="shortenBtn" style="flex:1;min-width:140px;">
+                🔗 RÚT GỌN LINK
+              </button>
+              <button class="btn btn-secondary" onclick="clear4mForm()" style="min-width:100px;">🗑️ Xóa</button>
+            </div>
+
+            <!-- Result box (hidden by default) -->
+            <div id="fourm_result_box" style="display:none;background:rgba(0,255,128,0.05);border:1px solid rgba(0,255,128,0.25);border-radius:12px;padding:18px;">
+              <div style="font-size:11px;letter-spacing:1px;color:var(--text-secondary);margin-bottom:8px;">LINK ĐÃ RÚT GỌN ✅</div>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <input class="form-input" id="fourm_short_url" type="text" readonly style="flex:1;font-family:'Orbitron',monospace;font-size:13px;color:#00ff80;background:rgba(0,255,128,0.06);border-color:rgba(0,255,128,0.2);" />
+                <button class="btn btn-primary" onclick="copy4mLink()" style="background:rgba(0,255,128,0.15);border-color:rgba(0,255,128,0.4);color:#00ff80;min-width:90px;">📋 Copy</button>
+                <a id="fourm_open_link" href="#" target="_blank" class="btn btn-secondary" style="min-width:80px;">🌐 Mở</a>
+              </div>
+            </div>
+
+            <!-- Error box -->
+            <div id="fourm_error_box" style="display:none;background:rgba(255,50,50,0.06);border:1px solid rgba(255,50,50,0.3);border-radius:10px;padding:14px;font-size:13px;color:#ff6666;"></div>
+          </div>
+        </div>
+
+        <!-- HISTORY CARD -->
+        <div class="data-card">
+          <div class="data-card-header">
+            <div class="data-card-title">📋 Lịch Sử Rút Gọn</div>
+            <button class="btn btn-secondary" style="padding:6px 14px;font-size:12px;" onclick="clear4mHistory()">🗑️ Xóa lịch sử</button>
+          </div>
+          <div style="padding:0 0 8px;">
+            <div id="fourm_history_list">
+              <div style="padding:40px;text-align:center;color:var(--text-secondary);font-size:14px;">Chưa có link nào được rút gọn</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /panel-shortlink -->
 
     </div><!-- /page-content -->
   </div><!-- /main-content -->
