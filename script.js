@@ -1,13 +1,13 @@
-// ===== FF KEY CENTER - MAIN SCRIPT =====
+// ===== Get Key AUTO - MAIN SCRIPT =====
 'use strict';
 
 // ============================================================
 //  CONSTANTS & CONFIG
 // ============================================================
 const CONFIG = {
-  COOLDOWN_HOURS: 24,
+  COOLDOWN_HOURS: 3,
   COUNTDOWN_SECONDS: 60,
-  KEY_FORMAT: 'FFKEY-XXXX-XXXX-XXXX',
+  KEY_FORMAT: 'TDZ-XXX',
   LS_LAST_KEY: 'ffkey_last_claim',
   LS_WEBHOOK: 'ffkey_webhook_url',
   LS_SYSTEM: 'ffkey_system_enabled',
@@ -299,7 +299,7 @@ async function sendDiscordWebhook(key) {
         { name: '⏰ Thời gian', value: now.toLocaleString('vi-VN'), inline: true },
         { name: '🌐 IP', value: generateFakeIP(), inline: true },
       ],
-      footer: { text: 'FF KEY CENTER • System Alert' },
+      footer: { text: 'Get Key AUTO • System Alert' },
       timestamp: now.toISOString(),
     }],
   };
