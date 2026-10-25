@@ -1,4 +1,4 @@
-// ===== FF KEY CENTER - ADMIN SCRIPT =====
+// ===== Get Key AUTO - ADMIN SCRIPT =====
 'use strict';
 
 // ============================================================
