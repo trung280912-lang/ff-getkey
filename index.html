@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FF KEY CENTER - Lấy Key Free Fire Miễn Phí</title>
+  <meta name="description" content="Hệ thống cấp key Free Fire miễn phí, nhanh chóng, uy tín. Nhận Diamond, Skin, Booyah Pass ngay hôm nay!" />
+  <meta name="theme-color" content="#FF6B00" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ==================== CANVAS BACKGROUNDS ==================== -->
+<canvas id="particles-canvas"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- ==================== HEADER ==================== -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-icon">🔥</div>
+    <div>
+      <div class="logo-text">FF KEY CENTER</div>
+    </div>
+  </a>
+
+  <nav class="header-nav">
+    <a href="#how-to-use">Hướng Dẫn</a>
+    <a href="#benefits">Lợi Ích</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+
+  <div class="header-status">
+    <div class="status-dot"></div>
+    ONLINE
+  </div>
+</header>
+
+<!-- ==================== TICKER ==================== -->
+<div class="ticker-wrapper" style="margin-top:70px;">
+  <div class="ticker-track" id="tickerTrack">
+    <span class="ticker-item">🎮 Free Fire Key System v2.0</span>
+    <span class="ticker-item">💎 Nhận Diamond miễn phí</span>
+    <span class="ticker-item">🎁 Key mới cập nhật liên tục</span>
+    <span class="ticker-item">⚡ Hệ thống tự động 24/7</span>
+    <span class="ticker-item">🔑 Mỗi IP 1 key mỗi 24 giờ</span>
+    <span class="ticker-item">🏆 Uy tín - Nhanh chóng - Miễn phí</span>
+    <span class="ticker-item">🎮 Free Fire Key System v2.0</span>
+    <span class="ticker-item">💎 Nhận Diamond miễn phí</span>
+    <span class="ticker-item">🎁 Key mới cập nhật liên tục</span>
+    <span class="ticker-item">⚡ Hệ thống tự động 24/7</span>
+    <span class="ticker-item">🔑 Mỗi IP 1 key mỗi 24 giờ</span>
+    <span class="ticker-item">🏆 Uy tín - Nhanh chóng - Miễn phí</span>
+  </div>
+</div>
+
+<!-- ==================== HERO SECTION ==================== -->
+<section class="hero">
+  <div class="hero-bg-gradient"></div>
+  <div class="hero-content">
+
+    <div class="hero-badge">
+      🔥 HỆ THỐNG CẤP KEY FREE FIRE
+    </div>
+
+    <h1 class="hero-title">
+      LẤY KEY<br/>
+      <span class="highlight">FREE FIRE</span><br/>
+      MIỄN PHÍ
+    </h1>
+
+    <p class="hero-subtitle">
+      Hệ thống cấp key Free Fire miễn phí, nhanh chóng, uy tín.<br/>
+      Nhận Diamond, Skin cao cấp và Booyah Pass ngay hôm nay!
+    </p>
+
+    <div class="hero-warning">
+      ⚠️ Mỗi IP chỉ được lấy 1 key mỗi 24 giờ
+    </div>
+
+    <!-- STEP FLOW -->
+    <div class="step-flow">
+      <div class="step-item" id="step1">
+        <div class="step-num">1</div>
+        <div class="step-label">Nhấn lấy key</div>
+      </div>
+      <div class="step-arrow">›</div>
+      <div class="step-item" id="step2">
+        <div class="step-num">2</div>
+        <div class="step-label">Xem quảng cáo</div>
+      </div>
+      <div class="step-arrow">›</div>
+      <div class="step-item" id="step3">
+        <div class="step-num">3</div>
+        <div class="step-label">Nhận key</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== MAIN CARD ==================== -->
+<div class="main-card">
+  <div class="card">
+
+    <!-- KEY DISPLAY -->
+    <div class="key-display-wrapper">
+      <div class="key-label">🔑 YOUR FREE FIRE KEY</div>
+      <div class="key-box" id="keyBox">
+        <div class="key-shimmer"></div>
+        <span class="key-text masked" id="keyText">? ? ? ? - ? ? ? ? - ? ? ? ?</span>
+      </div>
+    </div>
+
+    <!-- COOLDOWN BOX -->
+    <div class="cooldown-box" id="cooldownBox">
+      <div class="cooldown-icon">⏳</div>
+      <div class="cooldown-title">BẠN ĐÃ LẤY KEY HÔM NAY</div>
+      <div class="cooldown-text">
+        Key của bạn đã hiển thị ở trên. Vui lòng chờ hết thời gian sau để lấy key mới:
+      </div>
+      <div class="cooldown-timer" id="cooldownRemaining">00:00:00</div>
+    </div>
+
+    <!-- TIMER -->
+    <div class="timer-wrapper" id="timerWrapper">
+      <div class="timer-label">⏳ ĐANG XỬ LÝ QUẢNG CÁO - VUI LÒNG ĐỢI...</div>
+      <div class="timer-bar-wrapper">
+        <div class="timer-bar" id="timerBar"></div>
+      </div>
+      <div class="timer-count" id="timerCount">60s</div>
+    </div>
+
+    <!-- PROCESSING STATE -->
+    <div class="processing-state" id="processingState">
+      <div class="spinner"></div>
+      <div class="processing-text">Đang xác minh và tạo key cho bạn...</div>
+    </div>
+
+    <!-- ACTION AREA -->
+    <div id="actionArea">
+      <button class="btn btn-primary" id="getKeyBtn" onclick="startGetKeyFlow()">
+        🎮 LẤY KEY NGAY
+      </button>
+    </div>
+
+    <!-- COPY AREA -->
+    <div id="copyArea" style="display:none; margin-top:16px;">
+      <button class="btn btn-copy" id="copyBtn" onclick="copyKey()">
+        📋 COPY KEY
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== STATS BAR ==================== -->
+<div style="position:relative;z-index:1;padding:0 24px;">
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-number" id="statTotal">0</span>
+      <div class="stat-label">Tổng Key Đã Cấp</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" id="statToday">0</span>
+      <div class="stat-label">Key Hôm Nay</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" id="statOnline">0</span>
+      <div class="stat-label">Người Dùng Online</div>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" data-count="99">0</span>
+      <div class="stat-label">% Tỉ Lệ Thành Công</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== HOW TO USE ==================== -->
+<section class="how-to-use" id="how-to-use">
+  <div class="container">
+    <h2 class="section-title">HƯỚNG DẪN SỬ DỤNG KEY</h2>
+    <div class="section-divider"></div>
+    <p class="section-sub">Chỉ cần 3 bước đơn giản để nhận phần thưởng của bạn</p>
+
+    <div class="steps-grid">
+      <div class="guide-step">
+        <span class="guide-step-icon">🖱️</span>
+        <div class="guide-step-num">1</div>
+        <div class="guide-step-title">NHẤN LẤY KEY</div>
+        <p class="guide-step-desc">
+          Nhấn nút "LẤY KEY NGAY" và hoàn thành bước xác minh qua trang quảng cáo. 
+          Quá trình này giúp duy trì hệ thống miễn phí.
+        </p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-icon">⏳</span>
+        <div class="guide-step-num">2</div>
+        <div class="guide-step-title">CHỜ XỬ LÝ</div>
+        <p class="guide-step-desc">
+          Hệ thống sẽ xác minh yêu cầu của bạn trong vòng 60 giây. 
+          Đừng đóng trang hoặc làm mới trình duyệt trong lúc chờ.
+        </p>
+      </div>
+      <div class="guide-step">
+        <span class="guide-step-icon">🎮</span>
+        <div class="guide-step-num">3</div>
+        <div class="guide-step-title">NHẬP KEY VÀO GAME</div>
+        <p class="guide-step-desc">
+          Copy key và mở Free Fire → Cài Đặt → Nhập Key. 
+          Phần thưởng sẽ được cộng vào tài khoản ngay lập tức!
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== BENEFITS ==================== -->
+<section id="benefits">
+  <div class="container">
+    <h2 class="section-title">LỢI ÍCH KHI DÙNG KEY</h2>
+    <div class="section-divider"></div>
+    <p class="section-sub">Key FF Key Center cho phép bạn nhận nhiều phần thưởng giá trị</p>
+
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <span class="benefit-icon">💎</span>
+        <div class="benefit-title">DIAMOND</div>
+        <p class="benefit-desc">Nhận từ 100 đến 500 Diamond miễn phí để mua skin và vật phẩm yêu thích.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">👗</span>
+        <div class="benefit-title">SKIN ĐỘC QUYềN</div>
+        <p class="benefit-desc">Mở khóa các bộ skin độc quyền hiếm có, không thể mua bằng tiền thông thường.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">🏆</span>
+        <div class="benefit-title">BOOYAH PASS</div>
+        <p class="benefit-desc">Nhận Booyah Pass cao cấp với hàng trăm phần thưởng độc đáo theo mùa.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">🔫</span>
+        <div class="benefit-title">SKIN VŨ KHÍ</div>
+        <p class="benefit-desc">Trang bị skin vũ khí huyền thoại để tăng hiệu suất chiến đấu và phong cách.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">⚡</span>
+        <div class="benefit-title">CHARACTER</div>
+        <p class="benefit-desc">Mở khóa nhân vật đặc biệt với kỹ năng độc đáo giúp bạn Booyah dễ dàng hơn.</p>
+      </div>
+      <div class="benefit-card">
+        <span class="benefit-icon">🎁</span>
+        <div class="benefit-title">QUÀ TẶNG BÍ ẨN</div>
+        <p class="benefit-desc">Mỗi key có thể chứa phần thưởng bí ẩn đặc biệt ngẫu nhiên cho người may mắn!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FAQ ==================== -->
+<section style="background:rgba(255,107,0,0.02);border-top:1px solid rgba(255,107,0,0.1);border-bottom:1px solid rgba(255,107,0,0.1);">
+  <div class="container">
+    <h2 class="section-title">CÂU HỎI THƯỜNG GẶP</h2>
+    <div class="section-divider"></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;max-width:900px;margin:0 auto;">
+      <div class="card" style="padding:24px;">
+        <div style="color:var(--primary);font-family:'Orbitron',monospace;font-size:14px;margin-bottom:10px;">❓ Key dùng được bao lâu?</div>
+        <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;">Mỗi key có thời hạn sử dụng 24 giờ kể từ khi được cấp. Bạn nên nhập key vào game ngay sau khi lấy.</p>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div style="color:var(--primary);font-family:'Orbitron',monospace;font-size:14px;margin-bottom:10px;">❓ Mỗi ngày lấy được mấy key?</div>
+        <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;">Hệ thống giới hạn 1 key mỗi 24 giờ trên mỗi thiết bị/IP để đảm bảo công bằng cho tất cả người dùng.</p>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div style="color:var(--primary);font-family:'Orbitron',monospace;font-size:14px;margin-bottom:10px;">❓ Key có an toàn không?</div>
+        <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;">Hoàn toàn an toàn! Chúng tôi không yêu cầu mật khẩu hay thông tin tài khoản của bạn. Chỉ cần nhập key là nhận thưởng.</p>
+      </div>
+      <div class="card" style="padding:24px;">
+        <div style="color:var(--primary);font-family:'Orbitron',monospace;font-size:14px;margin-bottom:10px;">❓ Key không hoạt động?</div>
+        <p style="color:var(--text-secondary);font-size:14px;line-height:1.6;">Đảm bảo nhập đúng định dạng FFKEY-XXXX-XXXX-XXXX. Nếu vẫn không hoạt động, hãy thử lại sau hoặc liên hệ hỗ trợ qua Discord.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">🔥</div>
+        <div>
+          <div class="logo-text" style="font-size:16px;">FF KEY CENTER</div>
+        </div>
+      </div>
+      <p>Hệ thống cấp key Free Fire miễn phí, nhanh chóng và uy tín số 1 Việt Nam. Được hàng ngàn game thủ tin tưởng và sử dụng hằng ngày.</p>
+    </div>
+    <div>
+      <div class="footer-title">ĐIỀU HƯỚNG</div>
+      <ul class="footer-links">
+        <li><a href="#">Trang Chủ</a></li>
+        <li><a href="#how-to-use">Hướng Dẫn</a></li>
+        <li><a href="#benefits">Lợi Ích</a></li>
+        <li><a href="admin.html">Admin Panel</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">HỖ TRỢ</div>
+      <ul class="footer-links">
+        <li><a href="#">Discord Server</a></li>
+        <li><a href="#">Facebook Group</a></li>
+        <li><a href="#">YouTube Channel</a></li>
+        <li><a href="#">Báo Lỗi</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">
+      © 2024 FF KEY CENTER. All rights reserved. Made with 🔥 for Free Fire Players.
+    </div>
+    <div class="footer-disclaimer">
+      Trang web này không liên quan đến Garena hay Free Fire.<br/>
+      Chỉ dành cho mục đích giải trí và demo.
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== SCRIPTS ==================== -->
+<script src="script.js"></script>
+
+</body>
+</html>

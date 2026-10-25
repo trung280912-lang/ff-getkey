@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel - FF KEY CENTER</title>
+  <link rel="stylesheet" href="admin.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ===================== LOGIN PAGE ===================== -->
+<div class="login-page" id="loginPage" style="display:none;">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon">🔥</div>
+      <div class="login-logo-text">FF KEY CENTER</div>
+      <div class="login-logo-sub">ADMIN PANEL</div>
+    </div>
+
+    <div class="login-error" id="loginError"></div>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label" for="loginUsername">Tên đăng nhập</label>
+        <input
+          class="form-input"
+          id="loginUsername"
+          type="text"
+          placeholder="admin"
+          autocomplete="username"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Mật khẩu</label>
+        <input
+          class="form-input"
+          id="loginPassword"
+          type="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;padding:16px;font-size:15px;margin-top:8px;">
+        🔐 ĐĂNG NHẬP
+      </button>
+    </form>
+
+    <div style="margin-top:20px;text-align:center;">
+      <a href="index.html" style="color:var(--text-secondary);font-size:13px;text-decoration:none;">
+        ← Quay về trang chính
+      </a>
+    </div>
+
+    <div style="margin-top:24px;padding:14px;background:rgba(255,107,0,0.06);border:1px solid rgba(255,107,0,0.2);border-radius:10px;">
+      <div style="font-size:11px;color:var(--text-secondary);letter-spacing:1px;margin-bottom:6px;">DEMO CREDENTIALS</div>
+      <div style="font-size:13px;color:var(--primary);font-family:'Orbitron',monospace;">admin / admin123</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN LAYOUT ===================== -->
+<div class="admin-layout" id="adminLayout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">🔥</div>
+        <div>
+          <div class="sidebar-logo-text">FF KEY CENTER</div>
+          <div class="sidebar-logo-badge">ADMIN PANEL</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">TỔNG QUAN</div>
+
+      <div class="nav-item active" data-panel="dashboard" onclick="switchPanel('dashboard')">
+        <span class="nav-item-icon">📊</span>
+        Dashboard
+      </div>
+
+      <div class="nav-section-label">QUẢN LÝ</div>
+
+      <div class="nav-item" data-panel="history" onclick="switchPanel('history')">
+        <span class="nav-item-icon">📜</span>
+        Lịch Sử Key
+        <span class="nav-badge" id="historyBadge">0</span>
+      </div>
+
+      <div class="nav-item" data-panel="keys" onclick="switchPanel('keys')">
+        <span class="nav-item-icon">🔑</span>
+        Quản Lý Key
+      </div>
+
+      <div class="nav-section-label">HỆ THỐNG</div>
+
+      <div class="nav-item" data-panel="webhook" onclick="switchPanel('webhook')">
+        <span class="nav-item-icon">🔔</span>
+        Discord Webhook
+      </div>
+
+      <div class="nav-item" data-panel="settings" onclick="switchPanel('settings')">
+        <span class="nav-item-icon">⚙️</span>
+        Cài Đặt
+      </div>
+
+      <div class="nav-section-label">LIÊN KẾT</div>
+
+      <div class="nav-item" onclick="window.open('index.html','_blank')">
+        <span class="nav-item-icon">🌐</span>
+        Xem Trang Chính
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">A</div>
+        <div>
+          <div class="user-name">Administrator</div>
+          <div class="user-role">Super Admin</div>
+        </div>
+      </div>
+      <button class="btn btn-secondary" style="width:100%" onclick="logout()">
+        🚪 Đăng Xuất
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-actions">
+        <button class="system-toggle" id="systemToggleBtn" onclick="toggleSystem()">
+          <div class="toggle-dot"></div>
+          <span class="toggle-text">ONLINE</span>
+        </button>
+        <button class="btn btn-secondary" onclick="logout()">🚪 Logout</button>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+
+      <!-- ========== DASHBOARD PANEL ========== -->
+      <div class="panel active" id="panel-dashboard">
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-icon orange">🔑</div>
+            <div class="stat-card-value" id="statTotal">—</div>
+            <div class="stat-card-label">Tổng Key Đã Cấp</div>
+            <span class="stat-card-change up">+12%</span>
+            <div class="mini-chart"><div class="mini-chart-fill" style="width:78%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon red">📅</div>
+            <div class="stat-card-value" id="statToday">—</div>
+            <div class="stat-card-label">Key Hôm Nay</div>
+            <span class="stat-card-change up">+8%</span>
+            <div class="mini-chart"><div class="mini-chart-fill" style="width:55%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon green">✅</div>
+            <div class="stat-card-value" id="statAvailable">—</div>
+            <div class="stat-card-label">Key Khả Dụng</div>
+            <span class="stat-card-change down">-3%</span>
+            <div class="mini-chart"><div class="mini-chart-fill" style="width:40%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-icon blue">👥</div>
+            <div class="stat-card-value" id="statOnline">—</div>
+            <div class="stat-card-label">Người Online</div>
+            <span class="stat-card-change up">+24%</span>
+            <div class="mini-chart"><div class="mini-chart-fill" style="width:65%"></div></div>
+          </div>
+        </div>
+
+        <!-- RECENT ACTIVITY + QUICK ACTIONS -->
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:20px;flex-wrap:wrap;">
+          <div class="data-card">
+            <div class="data-card-header">
+              <div class="data-card-title">📜 Hoạt Động Gần Đây</div>
+              <button class="btn btn-secondary" onclick="switchPanel('history')">Xem tất cả →</button>
+            </div>
+            <div style="padding:16px 20px;" id="recentActivity">
+              <div style="text-align:center;color:var(--text-secondary);padding:30px;">Đang tải...</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <!-- Quick Actions -->
+            <div class="data-card">
+              <div class="data-card-header">
+                <div class="data-card-title">⚡ Thao Tác Nhanh</div>
+              </div>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:10px;">
+                <button class="btn btn-primary" style="width:100%;" onclick="switchPanel('keys');openCreateKeyModal()">
+                  ➕ Tạo Key Mới
+                </button>
+                <button class="btn btn-info" style="width:100%;" onclick="switchPanel('history')">
+                  📜 Xem Lịch Sử
+                </button>
+                <button class="btn btn-success" style="width:100%;" onclick="window.open('index.html','_blank')">
+                  🌐 Xem Trang Chính
+                </button>
+                <button class="btn btn-secondary" style="width:100%;" onclick="switchPanel('webhook')">
+                  🔔 Cấu Hình Webhook
+                </button>
+              </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="data-card">
+              <div class="data-card-header">
+                <div class="data-card-title">🖥️ Trạng Thái Hệ Thống</div>
+              </div>
+              <div style="padding:16px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                  <span style="color:var(--text-secondary);font-size:13px;">API Status</span>
+                  <span class="badge badge-success">● ONLINE</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                  <span style="color:var(--text-secondary);font-size:13px;">Database</span>
+                  <span class="badge badge-success">● Connected</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
+                  <span style="color:var(--text-secondary);font-size:13px;">Webhook</span>
+                  <span class="badge badge-warning" id="webhookStatus">● Chưa cấu hình</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
+                  <span style="color:var(--text-secondary);font-size:13px;">Uptime</span>
+                  <span style="color:var(--text-primary);font-size:13px;font-family:'Orbitron',monospace;">99.9%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== HISTORY PANEL ========== -->
+      <div class="panel" id="panel-history">
+        <div class="data-card">
+          <div class="data-card-header">
+            <div class="data-card-title">📜 Lịch Sử Lấy Key <span id="historyCount">(0)</span></div>
+            <div class="data-card-actions">
+              <button class="btn btn-secondary" onclick="exportHistory()">📥 Xuất JSON</button>
+              <button class="btn btn-danger" onclick="clearHistory()">🗑️ Xóa Tất Cả</button>
+            </div>
+          </div>
+
+          <div style="padding:16px 20px 0;">
+            <div class="search-bar">
+              <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input
+                  class="search-input"
+                  type="text"
+                  placeholder="Tìm key, IP..."
+                  oninput="searchHistory(this.value)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>KEY</th>
+                  <th>ĐỊA CHỈ IP</th>
+                  <th>THỜI GIAN</th>
+                  <th>TRẠNG THÁI</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <tr><td colspan="4" style="text-align:center;color:var(--text-secondary);padding:40px;">Đang tải...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== KEYS PANEL ========== -->
+      <div class="panel" id="panel-keys">
+
+        <!-- Bulk Generate -->
+        <div class="data-card" style="margin-bottom:20px;">
+          <div class="data-card-header">
+            <div class="data-card-title">⚙️ Tạo Key Hàng Loạt</div>
+          </div>
+          <div style="padding:20px;display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+            <div class="form-group" style="margin:0;flex:1;min-width:120px;">
+              <label class="form-label">Số lượng key</label>
+              <input class="form-input" type="number" id="bulkCount" value="10" min="1" max="100" />
+            </div>
+            <div class="form-group" style="margin:0;flex:2;min-width:200px;">
+              <label class="form-label">Ghi chú</label>
+              <input class="form-input" type="text" id="bulkNote" placeholder="VIP Key, Event, ..." />
+            </div>
+            <button class="btn btn-primary" onclick="generateBulkKeys()" style="flex-shrink:0;">
+              ⚡ TẠO HÀNG LOẠT
+            </button>
+          </div>
+        </div>
+
+        <div class="data-card">
+          <div class="data-card-header">
+            <div class="data-card-title">🔑 Danh Sách Key <span id="keysCount">(0)</span></div>
+            <div class="data-card-actions">
+              <button class="btn btn-primary" onclick="openCreateKeyModal()">➕ Tạo Key</button>
+              <button class="btn btn-danger" onclick="clearAllKeys()">🗑️ Xóa Tất Cả</button>
+            </div>
+          </div>
+
+          <div style="padding:16px 20px 0;">
+            <div class="search-bar">
+              <div class="search-input-wrapper">
+                <span class="search-icon">🔍</span>
+                <input
+                  class="search-input"
+                  type="text"
+                  placeholder="Tìm key..."
+                  oninput="searchKeys(this.value)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>KEY</th>
+                  <th>NGÀY TẠO</th>
+                  <th>TRẠNG THÁI</th>
+                  <th>GHI CHÚ</th>
+                  <th>THAO TÁC</th>
+                </tr>
+              </thead>
+              <tbody id="keysTableBody">
+                <tr><td colspan="5" style="text-align:center;color:var(--text-secondary);padding:40px;">Đang tải...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== WEBHOOK PANEL ========== -->
+      <div class="panel" id="panel-webhook">
+        <div class="data-card">
+          <div class="data-card-header">
+            <div class="data-card-title">🔔 Cấu Hình Discord Webhook</div>
+          </div>
+          <div style="padding:28px;">
+            <div style="background:rgba(0,207,255,0.06);border:1px solid rgba(0,207,255,0.2);border-radius:10px;padding:16px;margin-bottom:24px;">
+              <div style="color:#00cfff;font-size:13px;font-weight:600;margin-bottom:6px;">ℹ️ Hướng dẫn</div>
+              <p style="color:var(--text-secondary);font-size:13px;line-height:1.6;">
+                Webhook Discord sẽ gửi thông báo tự động mỗi khi có người lấy key thành công.
+                Vào Server Discord → Channel Settings → Integrations → Webhooks → New Webhook → Copy URL.
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Discord Webhook URL</label>
+              <input
+                class="form-input"
+                id="webhookUrl"
+                type="url"
+                placeholder="https://discord.com/api/webhooks/..."
+                style="font-family:'Orbitron',monospace;font-size:12px;letter-spacing:0.5px;"
+              />
+            </div>
+
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <button class="btn btn-primary" onclick="saveSettings()">💾 LƯU WEBHOOK</button>
+              <button class="btn btn-info" id="testWebhookBtn" onclick="testWebhook()">🧪 TEST WEBHOOK</button>
+              <button class="btn btn-danger" onclick="clearWebhook()">🗑️ XÓA WEBHOOK</button>
+            </div>
+
+            <div style="margin-top:32px;">
+              <div class="form-label" style="margin-bottom:16px;">📋 PAYLOAD MẪU</div>
+              <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px;font-family:monospace;font-size:12px;color:#aaffaa;line-height:1.6;overflow-x:auto;">
+<pre>{
+  "username": "FF KEY CENTER",
+  "embeds": [{
+    "title": "🔑 KEY MỚI ĐÃ ĐƯỢC LẤY!",
+    "color": 16740096,
+    "fields": [
+      { "name": "🎮 Key", "value": "`FFKEY-XXXX-XXXX-XXXX`" },
+      { "name": "⏰ Thời gian", "value": "25/10/2024 09:30:00" },
+      { "name": "🌐 IP", "value": "103.xxx.xxx.xxx" }
+    ]
+  }]
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== SETTINGS PANEL ========== -->
+      <div class="panel" id="panel-settings">
+        <div class="data-card" style="margin-bottom:20px;">
+          <div class="data-card-header">
+            <div class="data-card-title">⚙️ Cài Đặt Hệ Thống</div>
+          </div>
+          <div style="padding:0 24px;">
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Trạng thái hệ thống</div>
+                <div class="setting-desc">Bật/tắt toàn bộ hệ thống cấp key. Khi tắt, người dùng không thể lấy key.</div>
+              </div>
+              <div class="setting-control" style="display:flex;align-items:center;gap:12px;">
+                <label class="toggle-switch" onclick="toggleSystem()">
+                  <input type="checkbox" id="systemCheckbox" checked />
+                  <div class="toggle-track">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                </label>
+                <span id="systemStatusText" style="font-size:13px;font-weight:700;color:#00ff64;">BẬT</span>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Thời gian cooldown (giờ)</div>
+                <div class="setting-desc">Khoảng thời gian giữa 2 lần lấy key của cùng một IP.</div>
+              </div>
+              <div class="setting-control">
+                <input class="form-input" type="number" id="cooldownSetting" value="24" min="1" max="168" />
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Thời gian đếm ngược (giây)</div>
+                <div class="setting-desc">Thời gian người dùng phải chờ trước khi nhận key.</div>
+              </div>
+              <div class="setting-control">
+                <input class="form-input" type="number" id="countdownSetting" value="60" min="10" max="300" />
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <div class="setting-label">Discord Webhook URL</div>
+                <div class="setting-desc">URL webhook để nhận thông báo khi có người lấy key.</div>
+              </div>
+              <div class="setting-control">
+                <input class="form-input" type="url" id="webhookUrlSettings" placeholder="https://discord.com/api/webhooks/..." />
+              </div>
+            </div>
+
+          </div>
+          <div style="padding:20px 24px;border-top:1px solid rgba(255,255,255,0.04);display:flex;gap:10px;">
+            <button class="btn btn-primary" onclick="saveAllSettings()">💾 LƯU CÀI ĐẶT</button>
+            <button class="btn btn-secondary" onclick="resetSettings()">↩️ Khôi Phục Mặc Định</button>
+          </div>
+        </div>
+
+        <!-- RESET DATA -->
+        <div class="data-card">
+          <div class="data-card-header">
+            <div class="data-card-title" style="color:#ff6666;">⚠️ Vùng Nguy Hiểm</div>
+          </div>
+          <div style="padding:24px;display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn btn-danger" onclick="clearHistory()">🗑️ Xóa Lịch Sử</button>
+            <button class="btn btn-danger" onclick="clearAllKeys()">🗑️ Xóa Tất Cả Key</button>
+            <button class="btn btn-danger" onclick="resetAll()">💥 Reset Toàn Bộ Dữ Liệu</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-content -->
+  </div><!-- /main-content -->
+</div><!-- /admin-layout -->
+
+<!-- ===================== MODAL: CREATE KEY ===================== -->
+<div class="modal-overlay" id="createKeyModal">
+  <div class="modal">
+    <div class="modal-title">➕ Tạo Key Mới</div>
+
+    <div class="form-group">
+      <label class="form-label">Giá Trị Key</label>
+      <div style="display:flex;gap:10px;">
+        <input
+          class="form-input"
+          id="newKeyValue"
+          type="text"
+          placeholder="FFKEY-XXXX-XXXX-XXXX"
+          style="font-family:'Orbitron',monospace;font-size:13px;flex:1;"
+        />
+        <button class="btn btn-secondary" onclick="regenerateKey()" title="Tạo key ngẫu nhiên">🔄</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Ghi Chú (tuỳ chọn)</label>
+      <input
+        class="form-input"
+        id="newKeyNote"
+        type="text"
+        placeholder="VIP Key, Event Key, ..."
+      />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeCreateKeyModal()">Hủy</button>
+      <button class="btn btn-primary" onclick="createKey()">✅ Tạo Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script src="admin.js"></script>
+<script>
+  // Extra admin functions not in admin.js
+  function clearWebhook() {
+    if (!confirm('Xóa webhook URL?')) return;
+    localStorage.removeItem('ffkey_webhook_url');
+    document.getElementById('webhookUrl').value = '';
+    showToast('🗑️ Đã xóa webhook!', 'success');
+  }
+
+  function saveAllSettings() {
+    const webhookInput = document.getElementById('webhookUrlSettings');
+    if (webhookInput && webhookInput.value) {
+      localStorage.setItem('ffkey_webhook_url', webhookInput.value);
+    }
+    const cooldown = document.getElementById('cooldownSetting')?.value;
+    if (cooldown) localStorage.setItem('ffkey_cooldown_hours', cooldown);
+    const countdown = document.getElementById('countdownSetting')?.value;
+    if (countdown) localStorage.setItem('ffkey_countdown_seconds', countdown);
+    showToast('✅ Đã lưu cài đặt!', 'success');
+  }
+
+  function resetSettings() {
+    document.getElementById('cooldownSetting').value = '24';
+    document.getElementById('countdownSetting').value = '60';
+    showToast('↩️ Đã khôi phục mặc định!', 'info');
+  }
+
+  function resetAll() {
+    if (!confirm('⚠️ XÓA TOÀN BỘ DỮ LIỆU? Hành động này không thể hoàn tác!')) return;
+    const keys = Object.keys(localStorage).filter(k => k.startsWith('ffkey_'));
+    keys.forEach(k => localStorage.removeItem(k));
+    showToast('💥 Đã reset toàn bộ dữ liệu!', 'warning');
+    setTimeout(() => location.reload(), 1500);
+  }
+
+  // Check webhook status on load
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      const wh = localStorage.getItem('ffkey_webhook_url');
+      const el = document.getElementById('webhookStatus');
+      if (el) {
+        el.textContent = wh ? '● Đã cấu hình' : '● Chưa cấu hình';
+        el.className = 'badge ' + (wh ? 'badge-success' : 'badge-warning');
+      }
+      // Sync webhook to settings tab
+      const whs = document.getElementById('webhookUrlSettings');
+      if (whs && wh) whs.value = wh;
+      // Update history badge
+      const history = JSON.parse(localStorage.getItem('ffkey_history') || '[]');
+      const hbadge = document.getElementById('historyBadge');
+      if (hbadge) hbadge.textContent = history.length;
+    }, 500);
+  });
+</script>
+
+</body>
+</html>
