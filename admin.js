@@ -6,7 +6,7 @@
 // ============================================================
 const ADMIN = {
   USERNAME: 'admin',
-  PASSWORD: 'admin123',
+  PASSWORD: '280912',
   LS_SESSION: 'ffkey_admin_session',
   LS_WEBHOOK: 'ffkey_webhook_url',
   LS_SYSTEM: 'ffkey_system_enabled',
