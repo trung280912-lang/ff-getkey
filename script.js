@@ -242,7 +242,7 @@ function copyKey() {
   navigator.clipboard.writeText(state.currentKey).then(() => {
     DOM.copyBtn.classList.add('copied');
     DOM.copyBtn.innerHTML = '✅ ĐÃ COPY!';
-    showToast('📋 Đã copy key vào clipboard!', 'success');
+    showToast('📋 Đã copy key vào trong đầu bạn!', 'success');
     setTimeout(() => {
       DOM.copyBtn.classList.remove('copied');
       DOM.copyBtn.innerHTML = '📋 COPY KEY';
